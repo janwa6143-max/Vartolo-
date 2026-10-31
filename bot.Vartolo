@@ -3,18 +3,15 @@ from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
 
-# ضع توكن البوت الخاص بك هنا (تحصل عليه من BotFather)
-TOKEN = "YOUR_BOT_TOKEN_HERE"
+# التوكن الصحيح موضوع هنا بشكل مباشر داخل المتغير:
+TOKEN = "8737348077:AAHXriDFmzjGe3KGJLS0gjwCOXfeneZLIkc"
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# خوارزمية حساب الرهان وتوزيع الأرباح (محاكاة خوارزمية الألعاب)
+# خوارزمية حساب الرهان وتوزيع الأرباح
 def calculate_bet_outcome(bet_amount: float, multiplier: float, win: bool) -> float:
-    """
-    خوارزمية حساب النتيجة بناءً على قيمة الرهان ومعامل المضاعفة
-    """
     if win:
         return round(bet_amount * multiplier, 2)
     else:
@@ -22,7 +19,6 @@ def calculate_bet_outcome(bet_amount: float, multiplier: float, win: bool) -> fl
 
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
-    # زر لفتح تطبيق التاكا (Mini App)
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -46,20 +42,8 @@ async def cmd_start(message: types.Message):
 
 @dp.callback_query(F.data == "wallet")
 async def process_wallet(callback: types.CallbackQuery):
-    # خوارزمية جلب الرصيد (محاكاة)
-    user_balance = 150.00  # مثال لرصيد المستخدم
+    user_balance = 150.00
     await callback.message.answer(f"💼 محفظتك الحالية:\nالرصيد: **{user_balance} USDT**", parse_mode="Markdown")
-    await callback.answer()
-
-@dp.callback_query(F.data == "rules")
-async def process_rules(callback: types.CallbackQuery):
-    rules_text = (
-        "📜 **قواعد وأحكام منصة تاكا:**\n"
-        "1. النتائج تعتمد على خوارزميات عادلة ومنظمة.\n"
-        "2. يتم تحديث الأرصدة فورياً بعد كل رهان.\n"
-        "3. الالتزام باللعب النظيف يضمن استمرار حسابك."
-    )
-    await callback.message.answer(rules_text, parse_mode="Markdown")
     await callback.answer()
 
 if __name__ == "__main__":
