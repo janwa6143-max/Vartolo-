@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# خوارزمية حساب الرهان وتوزيع الأرباح (مثال توضيحي)
+# خوارزمية حساب الرهان وتوزيع الأرباح (محاكاة خوارزمية الألعاب)
 def calculate_bet_outcome(bet_amount: float, multiplier: float, win: bool) -> float:
     """
     خوارزمية حساب النتيجة بناءً على قيمة الرهان ومعامل المضاعفة
@@ -51,7 +51,17 @@ async def process_wallet(callback: types.CallbackQuery):
     await callback.message.answer(f"💼 محفظتك الحالية:\nالرصيد: **{user_balance} USDT**", parse_mode="Markdown")
     await callback.answer()
 
+@dp.callback_query(F.data == "rules")
+async def process_rules(callback: types.CallbackQuery):
+    rules_text = (
+        "📜 **قواعد وأحكام منصة تاكا:**\n"
+        "1. النتائج تعتمد على خوارزميات عادلة ومنظمة.\n"
+        "2. يتم تحديث الأرصدة فورياً بعد كل رهان.\n"
+        "3. الالتزام باللعب النظيف يضمن استمرار حسابك."
+    )
+    await callback.message.answer(rules_text, parse_mode="Markdown")
+    await callback.answer()
+
 if __name__ == "__main__":
     import asyncio
     asyncio.run(dp.start_polling(bot))
-
