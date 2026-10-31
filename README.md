@@ -1,12 +1,57 @@
-# Wordlists
+import logging
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.filters import Command
+from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
 
-A sample set of word lists and/or dictionaries for testing against a dictionary attack.
+# ضع توكن البوت الخاص بك هنا (تحصل عليه من BotFather)
+TOKEN = "YOUR_BOT_TOKEN_HERE"
 
-## Audience
-This is for those who are willing to put their security to the test or need a starting set of a wordlist to start with.
+logging.basicConfig(level=logging.INFO)
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
 
-## Definition
-In cryptanalysis and computer security, a dictionary attack is a type of brute force attack technique for defeating a cipher or authentication mechanism by trying to determine its decryption key or passphrase by trying hundreds or sometimes millions of likely possibilities, such as words in a dictionary.
+# خوارزمية حساب الرهان وتوزيع الأرباح (مثال توضيحي)
+def calculate_bet_outcome(bet_amount: float, multiplier: float, win: bool) -> float:
+    """
+    خوارزمية حساب النتيجة بناءً على قيمة الرهان ومعامل المضاعفة
+    """
+    if win:
+        return round(bet_amount * multiplier, 2)
+    else:
+        return 0.0
 
-### Technique
-A dictionary attack is based on trying all the strings in a pre-arranged listing, typically derived from a list of words such as in a dictionary. In contrast to a brute force attack, where a large proportion of the key space is searched systematically, a dictionary attack tries only those possibilities which are deemed most likely to succeed. Dictionary attacks often succeed because many people have a tendency to choose short passwords that are ordinary words or common passwords, or simple variants obtained, for example, by appending a digit or punctuation character. Dictionary attacks are relatively easy to defeat, e.g. by using a passphrase or otherwise choosing a password that is not a simple variant of a word found in any dictionary or listing of commonly used passwords.
+@dp.message(Command("start"))
+async def cmd_start(message: types.Message):
+    # زر لفتح تطبيق التاكا (Mini App)
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="🎮 افتح تطبيق تاكا (Taka)",
+                    web_app=WebAppInfo(url="https://your-mini-app-url.com")
+                )
+            ],
+            [
+                InlineKeyboardButton(text="💰 محفظتي", callback_data="wallet"),
+                InlineKeyboardButton(text="ℹ️ قواعد اللعبة", callback_data="rules")
+            ]
+        ]
+    )
+    
+    welcome_text = (
+        f"أهلاً بك يا {message.from_user.first_name} في منصة **تاكا (Taka)** للألعاب والرهان الخوارزمي! 🚀\n\n"
+        "اختر اللعبة وابدأ التحدي الآن مباشرة من داخل تلغرام."
+    )
+    await message.answer(welcome_text, reply_markup=keyboard, parse_mode="Markdown")
+
+@dp.callback_query(F.data == "wallet")
+async def process_wallet(callback: types.CallbackQuery):
+    # خوارزمية جلب الرصيد (محاكاة)
+    user_balance = 150.00  # مثال لرصيد المستخدم
+    await callback.message.answer(f"💼 محفظتك الحالية:\nالرصيد: **{user_balance} USDT**", parse_mode="Markdown")
+    await callback.answer()
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(dp.start_polling(bot))
+
